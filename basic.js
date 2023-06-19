@@ -1,18 +1,30 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const container = document.querySelector(".grid-container");
-    let isMouseDown = false; // Flag to track mouse state
-    let clearButton = null; // Variable to hold the clear button element
-    let currentColor = "#000000"; // Variable to hold the current background color for the trail
-    let setColorButton = null; // Variable to hold the set color button element
-  
-    // Create 16x16 grid
-    for (let i = 0; i < 16; i++) {
-      for (let j = 0; j < 16; j++) {
+  const container = document.querySelector(".grid-container");
+  let isMouseDown = false;
+  let clearButton = null;
+  let currentColor = "#000000";
+  let setColorButton = null;
+  let gridNumberButton = null;
+  let size = 16; // Default grid size
+
+  // Create 16x16 grid
+  createGrid();
+
+  function createGrid() {
+    // Set the grid template columns and rows based on the size variable
+    container.style.gridTemplateColumns = `repeat(${size}, minmax(0, 1fr))`;
+    container.style.gridTemplateRows = `repeat(${size}, minmax(0, 1fr))`;
+
+    // Clear the previous grid items
+    container.innerHTML = "";
+
+    // Create new grid items
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
         const gridItem = document.createElement("div");
         gridItem.classList.add("grid-item");
         container.appendChild(gridItem);
-  
-        // Mouse hover event listener
+      
         gridItem.addEventListener("mouseover", function(event) {
           if (isMouseDown) {
             if (event.target === clearButton) {
@@ -20,11 +32,11 @@ document.addEventListener("DOMContentLoaded", function() {
             } else if (event.target === setColorButton) {
               setColor();
             } else {
-              event.target.style.backgroundColor = currentColor; // Set the background color on mouse hover
+              event.target.style.backgroundColor = currentColor;
             }
           }
         });
-  
+
         gridItem.addEventListener("mousedown", function(event) {
           isMouseDown = true;
           if (event.target === clearButton) {
@@ -32,49 +44,65 @@ document.addEventListener("DOMContentLoaded", function() {
           } else if (event.target === setColorButton) {
             setColor();
           } else {
-            event.target.style.backgroundColor = currentColor; // Set the background color on mouse down
+            event.target.style.backgroundColor = currentColor;
           }
         });
-  
-        // Add mouse up event listener
+
         gridItem.addEventListener("mouseup", function() {
           isMouseDown = false;
         });
-  
-        // Set the first grid item as the clear button
+
         if (i === 0 && j === 0) {
-          gridItem.textContent = "Clr";
+          gridItem.textContent = String.fromCodePoint(0x21BB); // U+21BB: Unicode character for "↻"
           gridItem.classList.add("clear-button");
           clearButton = gridItem;
         }
-  
-        // Set the second grid item as the set color button
-        if (i === 1 && j === 0) {
-          gridItem.textContent = "Rndm";
+
+        if (i === 0 && j === 1) {
+          gridItem.textContent = String.fromCodePoint(0x1F308);
           gridItem.classList.add("setColor-button");
           setColorButton = gridItem;
         }
+
+        if (i === 0 && j === 3) {
+          gridItem.textContent = "#";
+          gridItem.classList.add("gridNumber-button");
+          gridNumberButton = gridItem;
+          gridItem.addEventListener("click", function() {
+            changeGridSize();
+          });
+        }
       }
     }
-  
-    function clearGrid() {
-      const gridItems = document.querySelectorAll(".grid-item");
-      gridItems.forEach(function(item) {
-        item.style.backgroundColor = "transparent"; // Reset the background color of all grid items
-      });
+  }
+
+  function changeGridSize() {
+    const newSize = parseInt(prompt("Enter the new grid size 4-100 (e.g., 16 for a 16x16 grid):"));
+    if (isNaN(newSize) || newSize < 4 || newSize > 100) {
+      alert("Invalid grid size. Please enter a valid number.");
+    } else {
+      size = newSize;
+      createGrid();
     }
-  
-    function getRandomColor() {
-      const letters = "0123456789ABCDEF";
-      let color = "#";
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
+  }
+
+  function clearGrid() {
+    const gridItems = document.querySelectorAll(".grid-item");
+    gridItems.forEach(function(item) {
+      item.style.backgroundColor = "transparent";
+    });
+  }
+
+  function getRandomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
     }
-  
-    function setColor() {
-      currentColor = getRandomColor(); // Generate a random color and assign it to the currentColor variable
-    }
-  });
-  
+    return color;
+  }
+
+  function setColor() {
+    currentColor = getRandomColor();
+  }
+});

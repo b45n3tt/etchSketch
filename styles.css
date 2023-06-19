@@ -8,19 +8,18 @@ body {
 }
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(16, minmax(0, 1fr));
-    grid-template-rows: repeat(16, minmax(0, 1fr));
-    gap: 2px;
+    grid-template-columns: repeat(size, minmax(0, 1fr));
+    grid-template-rows: repeat(size, minmax(0, 1fr));
+    /* gap: 1px; */
     width: 100%; 
     height: 100%; 
   }
 
 .grid-item {
     border: 1px solid black;
-    /* background-color: rgb(207, 206, 234); */
 }
  
-  @keyframes pulseRed {
+  @keyframes pulseOne {
     0% {
       background-color: red;
     }
@@ -35,34 +34,54 @@ body {
     }
   }
   
-  @keyframes pulseBlue {
+  @keyframes pulseTwo {
     0% {
-      background-color: rgb(255, 177, 0);
+      background-color: red;
     }
-    33% {
-      background-color: red;
+    43% {
+      background-color: rgb(255, 177, 0);
     } 
-    50% {
-      background-color: red;
+    60% {
+      background-color: rgb(255, 177, 0);
     }
     100% {
-      background-color: rgb(255, 177, 0);
+      background-color: red;
     }
   }
 
-  .pulsating,.clear-button, .wash-button {
-    animation: pulseRed 5s infinite;
+  @keyframes pulseThree {
+    0% {
+      background-color: red;
+    }
+    53% {
+      background-color: rgb(255, 177, 0);
+    } 
+    70% {
+      background-color: rgb(255, 177, 0);
+    }
+    100% {
+      background-color: red;
+    }
   }
 
-  .setColor-button{
-    animation: pulseBlue 5s infinite;
+  .pulsating,.clear-button,.setColor-button {
+    animation: pulseOne 5s infinite;
   }
 
-  .clear-button, .setColor-button, .wash-button{
+   .wash-button{
+    animation: pulseTwo 5s infinite;
+  }
+
+   .gridNumber-button{
+    animation: pulseThree 5s infinite;
+  }
+  .clear-button, .setColor-button, .wash-button, .gridNumber-button{
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bolder;
     font-family: 'Courier New', Courier, monospace;
     margin: 5px;
+    min-width: 15px;
+    min-height: 5px;
   }

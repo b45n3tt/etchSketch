@@ -5,10 +5,23 @@ document.addEventListener("DOMContentLoaded", function() {
     let currentColor = "#000000"; // Variable to hold the current background color for the trail
     let setColorButton = null; // Variable to hold the set color button element
     let washColorButton = null; // Variable to wash multiples colors into one
-
+    let gridNumberButton = null;
+    let size = 16; // Default grid size
+    
     // Create 16x16 grid
-    for (let i = 0; i < 16; i++) {
-      for (let j = 0; j < 16; j++) {
+    createGrid();
+   
+    function createGrid() {
+      // Set the grid template columns and rows based on the size variable
+      container.style.gridTemplateColumns = `repeat(${size}, minmax(0, 1fr))`;
+      container.style.gridTemplateRows = `repeat(${size}, minmax(0, 1fr))`;
+
+      // Clear the previous grid items
+      container.innerHTML = "";
+
+    // Create new grid items
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
         const gridItem = document.createElement("div");
         gridItem.classList.add("grid-item");
         container.appendChild(gridItem);
@@ -54,26 +67,45 @@ document.addEventListener("DOMContentLoaded", function() {
   
         // Set the first grid item as the clear button
         if (i === 0 && j === 0) {
-          gridItem.textContent = "Clr";
+          gridItem.textContent = String.fromCodePoint(0x21BB); // U+21BB: Unicode character for "↻"
           gridItem.classList.add("clear-button");
           clearButton = gridItem;
         }
   
         // Set the second grid item as the set color button
         if (i === 0 && j === 2) {
-          gridItem.textContent = "Rndm";
+          gridItem.textContent = String.fromCodePoint(0x1F308);
           gridItem.classList.add("setColor-button");
           setColorButton = gridItem;
         }
 
         // Set the third grid item as the wash button
         if (i === 0 && j === 1) {
-            gridItem.textContent = "W";
+            gridItem.textContent = String.fromCodePoint(0x1F30A);
             gridItem.classList.add("wash-button");
             washColorButton = gridItem;
           }
+           if (i === 0 && j === 3) {
+          gridItem.textContent = String.fromCodePoint(0x0023);
+          gridItem.classList.add("gridNumber-button");
+          gridNumberButton = gridItem;
+          gridItem.addEventListener("click", function() {
+            changeGridSize();
+          });
+        }
       }
     }
+  }
+  
+  function changeGridSize() {
+    const newSize = parseInt(prompt("Enter the new grid size 4-100 (e.g., 16 for a 16x16 grid):"));
+    if (isNaN(newSize) || newSize < 4 || newSize > 100) {
+      alert("Invalid grid size. Please enter a valid number.");
+    } else {
+      size = newSize;
+      createGrid();
+    }
+  }
   
     function clearGrid() {
       const gridItems = document.querySelectorAll(".grid-item");
